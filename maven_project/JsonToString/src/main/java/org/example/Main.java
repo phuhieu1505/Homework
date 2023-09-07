@@ -19,8 +19,8 @@ public class Main {
         Employee e2 = new Employee(002,"P_Hieu");
         empList1.add(e2);
         // Chuyển đổi Object -> JSON
-        String JSData = mapper1.writeValueAsString(empList1);
-        System.out.println("Object -> JSON: " + JSData );
+        String jsData = mapper1.writeValueAsString(empList1);
+        System.out.println("Object -> JSON: " + jsData );
         mapper1.writeValue(new File("target/emp.json"),empList1);
 
         ObjectMapper mapper2 = new ObjectMapper();
@@ -38,32 +38,5 @@ public class Main {
             System.out.println(e.getEmpID() + "," + e.getEmpName());});
 
 
-    }
-}
-class Employee{
-    private int EmpID;
-    private String EmpName;
-    public Employee(){}
-    public int getEmpID() {
-        return EmpID;
-    }
-
-    public void setEmpID(int empID) {
-        EmpID = empID;
-    }
-
-    public String getEmpName() {
-        return EmpName;
-    }
-
-    public void setEmpName(String empName) {
-        EmpName = empName;
-    }
-
-
-
-    public Employee(int empID, String empName) {
-        EmpID = empID;
-        EmpName = empName;
     }
 }
