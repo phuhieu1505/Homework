@@ -1,8 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.Repository.StudentRepository;
-import com.example.demo.Response.Student;
-import org.apache.coyote.Response;
+import com.example.demo.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
