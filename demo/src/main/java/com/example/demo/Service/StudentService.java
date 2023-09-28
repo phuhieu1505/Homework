@@ -16,16 +16,16 @@ public class StudentService {
     private StudentRepository studentRepository;
 
     public ResponseEntity<Student> addStudent(Student student){
-        return new ResponseEntity<>(studentRepository.add(student),HttpStatus.CREATED);
+        return new ResponseEntity<>(studentRepository.save(student),HttpStatus.CREATED);
     }
 
     public ResponseEntity<List<Student>>getStudent(){
         try{
-        return new ResponseEntity<>(studentRepository.getAllStudent(), HttpStatus.OK);
+        return new ResponseEntity<>(studentRepository.findAll(), HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new ResponseEntity<>(new ArrayList<>(),HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ArrayList<>(),HttpStatus.NO_CONTENT);
     }
 
 
