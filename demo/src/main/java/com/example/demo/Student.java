@@ -9,27 +9,19 @@ import lombok.Generated;
 import lombok.NoArgsConstructor;
 
 import org.springframework.stereotype.Component;
-@Data
+
+import java.io.Serializable;
+
 @Entity
-@Table(name = "student")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Student {
+public class Student implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "age")
     private int age;
-    public Student() {
-//        id = 0;
-    }
-
-    public Student(int id, String name, int age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
-    }
-
-
+    public Student() {}
 
     public int getId() {
         return id;
@@ -38,7 +30,6 @@ public class Student {
     public void setId(int id) {
         this.id = id;
     }
-
     public String getName() {
         return name;
     }

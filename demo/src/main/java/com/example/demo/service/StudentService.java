@@ -1,6 +1,6 @@
-package com.example.demo.Service;
+package com.example.demo.service;
 
-import com.example.demo.Repository.StudentRepository;
+import com.example.demo.repository.StudentRepository;
 import com.example.demo.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

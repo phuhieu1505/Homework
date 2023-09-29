@@ -1,15 +1,15 @@
-package com.example.demo.Controller;
+package com.example.demo.controller;
 
 import com.example.demo.Student;
-import com.example.demo.Service.StudentService;
+import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/student")
 public class StudentController {
     @Autowired
     StudentService studentService;
@@ -18,7 +18,7 @@ public class StudentController {
     public ResponseEntity<Student> addStudentInfo(@RequestBody Student student){
         return studentService.addStudent(student);
     }
-    @GetMapping("/student")
+    @GetMapping("/get")
     public ResponseEntity<List<Student>> getStudent(){
         return studentService.getStudent();
     }
