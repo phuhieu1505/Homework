@@ -25,9 +25,9 @@ public class StudentController {
         return studentService.getStudent();
     }
 
-    @GetMapping("/get") // TODO : update logic
-    public ResponseEntity<StudentDataResponse> getStudent(@RequestParam("id") int id){
-        return studentService.getStudent(id);
+    @GetMapping("/get/stuID") // TODO : update logic
+    public ResponseEntity<StudentDataResponse> getStudentById(@RequestParam("id") int id){
+        return studentService.getStudentById(id);
     }
 
 }

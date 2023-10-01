@@ -55,11 +55,17 @@ public class StudentService {
 	}
 
 
-	public ResponseEntity<StudentDataResponse> getStudent(int id) {
-		List<Student> studentList = new ArrayList<>();
-		
-
-		return null;
+	public ResponseEntity<StudentDataResponse> getStudentById(int id) {
+		Student student = studentRepository.getStudentById(id);
+		StudentDataResponse studentDataResponse = new StudentDataResponse();
+		if(student != null){
+			studentDataResponse.setId(student.getId());
+			studentDataResponse.setName(student.getName());
+			studentDataResponse.setAge(student.getAge());
+			return new ResponseEntity<>(studentDataResponse,HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 
