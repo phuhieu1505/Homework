@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.model.entity.Student;
 import com.example.demo.model.http.CreateStudentRequest;
+import com.example.demo.model.http.StudentDataResponse;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,16 +29,36 @@ public class StudentService {
 		), HttpStatus.CREATED);
 	}
 
-	public ResponseEntity<List<Student>> getStudent() {
+	public ResponseEntity<List<StudentDataResponse>> getStudent() {
 		try {
-			return new ResponseEntity<>(studentRepository.findAll(), HttpStatus.OK);
+			List<Student> studentList = studentRepository.findAll();
+			if (!studentList.isEmpty()) {
+				List<StudentDataResponse> studentDataResponseList = new ArrayList<>();
+
+				// Sao chép dữ liệu từ danh sách Student sang danh sách StudentDataResponse
+				for (Student student : studentList) {
+					StudentDataResponse studentDataResponse = new StudentDataResponse();
+					studentDataResponse.setId((student.getId()));
+					studentDataResponse.setName(student.getName());
+					studentDataResponse.setAge(student.getAge());
+					studentDataResponseList.add(studentDataResponse);
+				}
+
+				return new ResponseEntity<>(studentDataResponseList, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NO_CONTENT);
 	}
 
-	public ResponseEntity<Student> getStudent(String id) {
+
+	public ResponseEntity<StudentDataResponse> getStudent(int id) {
+		List<Student> studentList = new ArrayList<>();
+		
+
 		return null;
 	}
 

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.entity.Student;
 import com.example.demo.model.http.CreateStudentRequest;
+import com.example.demo.model.http.StudentDataResponse;
 import com.example.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +21,12 @@ public class StudentController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Student>> getStudent(){
+    public ResponseEntity<List<StudentDataResponse>> getStudent(){
         return studentService.getStudent();
     }
 
     @GetMapping("/get") // TODO : update logic
-    public ResponseEntity<Student> getStudent(@RequestParam(required = true) String id){
+    public ResponseEntity<StudentDataResponse> getStudent(@RequestParam("id") int id){
         return studentService.getStudent(id);
     }
 
