@@ -35,5 +35,10 @@ public class StudentController {
         return studentService.updateStudent(id,createStudentRequest);
     }
 
+    @DeleteMapping("/delete/")
+    public ResponseEntity<StudentDataResponse> deleteStudent(@RequestParam("id") int id){
+        return studentService.deleteStudent(id);
+    }
+
 }
 

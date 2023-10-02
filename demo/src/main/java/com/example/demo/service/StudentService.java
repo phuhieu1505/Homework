@@ -87,4 +87,18 @@ public class StudentService {
 		}
 	}
 
+	public ResponseEntity<StudentDataResponse> deleteStudent(int id) {
+		Optional<Student> student = studentRepository.findById(id);
+		StudentDataResponse studentDataResponse = new StudentDataResponse();
+		if(student != null){
+			Student existingStudent = student.get();
+			studentRepository.deleteById(id);
+			studentDataResponse.setId(existingStudent.getId());
+			studentDataResponse.setName(existingStudent.getName());
+			studentDataResponse.setAge(existingStudent.getAge());
+			return new ResponseEntity<>(studentDataResponse,HttpStatus.GONE);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+
 }
