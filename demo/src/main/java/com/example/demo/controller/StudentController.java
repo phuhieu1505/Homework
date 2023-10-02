@@ -30,5 +30,10 @@ public class StudentController {
         return studentService.getStudentById(id);
     }
 
+    @PutMapping("/update/")
+    public ResponseEntity<Student> updateStudent(@RequestParam("id") int id, @RequestBody CreateStudentRequest createStudentRequest) throws Exception {
+        return studentService.updateStudent(id,createStudentRequest);
+    }
+
 }
 

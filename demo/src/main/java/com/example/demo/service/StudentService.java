@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -58,15 +59,32 @@ public class StudentService {
 	public ResponseEntity<StudentDataResponse> getStudentById(int id) {
 		Student student = studentRepository.getStudentById(id);
 		StudentDataResponse studentDataResponse = new StudentDataResponse();
-		if(student != null){
+		if (student != null) {
 			studentDataResponse.setId(student.getId());
 			studentDataResponse.setName(student.getName());
 			studentDataResponse.setAge(student.getAge());
-			return new ResponseEntity<>(studentDataResponse,HttpStatus.OK);
-		}else {
+			return new ResponseEntity<>(studentDataResponse, HttpStatus.OK);
+		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
+	public ResponseEntity<Student> updateStudent(int id, CreateStudentRequest student) {
+		Optional<Student> studentOptional = studentRepository.findById(id);
+
+		if (studentOptional.isPresent()) {
+			Student existingStudent = studentOptional.get();
+
+			if (student.getName() != null && !student.getName().isEmpty()) {
+				existingStudent.setName(student.getName());
+			}
+			if (student.getAge() != null && student.getAge() > 0) {
+				existingStudent.setAge(student.getAge());
+			}
+			return new ResponseEntity<>(studentRepository.save(existingStudent), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 
 }
