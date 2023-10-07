@@ -31,13 +31,13 @@ public class StudentController {
     }
 
     @PutMapping("/update/")
-    public ResponseEntity<Student> updateStudent(@RequestParam("stu_id") String stu_id, @RequestBody CreateStudentRequest createStudentRequest) throws Exception {
-        return studentService.updateStudent(stu_id,createStudentRequest);
+    public ResponseEntity<Student> updateStudent(@RequestParam("id") String id, @RequestBody CreateStudentRequest createStudentRequest) throws Exception {
+        return studentService.updateStudent(id,createStudentRequest);
     }
 
     @DeleteMapping("/delete/")
-    public ResponseEntity<StudentDataResponse> deleteStudent(@RequestParam("stu_id") String stu_id){
-        return studentService.deleteStudent(stu_id);
+    public ResponseEntity<StudentDataResponse> deleteStudent(@RequestParam("id") String id){
+        return studentService.deleteStudent(id);
     }
 
 }

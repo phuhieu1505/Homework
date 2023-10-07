@@ -30,6 +30,7 @@ public class StudentService {
 						.id(student.getId())
 						.age(student.getAge())
 						.stu_name(student.getStu_name())
+						.class_id(student.getClass_id())
 						.build()
 		), HttpStatus.CREATED);
 	}
@@ -61,19 +62,20 @@ public class StudentService {
 	}
 
 
-	public ResponseEntity<StudentDataResponse> getStudentById(String id) {
-		Optional<Student> studentOptional = studentRepository.findById(id);
+	public ResponseEntity<StudentDataResponse> getStudentById(String _id) {
+		Optional<Student> studentOptional = studentRepository.findById(_id);
 		StudentDataResponse studentDataResponse = new StudentDataResponse();
-		if (studentOptional !=null) {
-				Student student = studentOptional.get();
-				studentDataResponse.setId(student.getId());
-				studentDataResponse.setStu_name(student.getStu_name());
-				studentDataResponse.setAge(student.getAge());
-				studentDataResponse.setClass_id(student.getClass_id());
-				new ResponseEntity<>(studentDataResponse, HttpStatus.OK);
+		if (studentOptional.isPresent()) {
+			Student student = studentOptional.get();
+			studentDataResponse.setId(student.getId());
+			studentDataResponse.setStu_name(student.getStu_name());
+			studentDataResponse.setAge(student.getAge());
+			studentDataResponse.setClass_id(student.getClass_id());
+			return new ResponseEntity<>(studentDataResponse, HttpStatus.OK);
 		}
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
+
 
 	public ResponseEntity<Student> updateStudent(String stu_id, CreateStudentRequest student) {
 		Optional<Student> studentOptional = studentRepository.findById(stu_id);
@@ -97,12 +99,12 @@ public class StudentService {
 		}
 	}
 
-	public ResponseEntity<StudentDataResponse> deleteStudent(String stu_id) {
-		Optional<Student> student = studentRepository.findById(stu_id);
+	public ResponseEntity<StudentDataResponse> deleteStudent(String id) {
+		Optional<Student> student = studentRepository.findById(id);
 		StudentDataResponse studentDataResponse = new StudentDataResponse();
 		if(student != null){
 			Student existingStudent = student.get();
-			studentRepository.deleteById(stu_id);
+			studentRepository.deleteById(id);
 			studentDataResponse.setId(existingStudent.getId());
 			studentDataResponse.setStu_name(existingStudent.getStu_name());
 			studentDataResponse.setAge(existingStudent.getAge());
