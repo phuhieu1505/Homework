@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class StudentDataResponse {
-	private String id;
+	private String stu_id;
 	private String stu_name;
 	private Integer age;
 	private String class_id;

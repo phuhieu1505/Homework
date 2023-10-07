@@ -26,18 +26,18 @@ public class StudentController {
     }
 
     @GetMapping("/get/") // TODO : update logic
-    public ResponseEntity<StudentDataResponse> getStudentById(@RequestParam("id") String id){
-        return studentService.getStudentById(id);
+    public ResponseEntity<StudentDataResponse> getStudentById(@RequestParam("id") String stu_id){
+        return studentService.getStudentById(stu_id);
     }
 
     @PutMapping("/update/")
-    public ResponseEntity<Student> updateStudent(@RequestParam("id") String id, @RequestBody CreateStudentRequest createStudentRequest) throws Exception {
-        return studentService.updateStudent(id,createStudentRequest);
+    public ResponseEntity<Student> updateStudent(@RequestParam("id") String stu_id, @RequestBody CreateStudentRequest createStudentRequest) throws Exception {
+        return studentService.updateStudent(stu_id,createStudentRequest);
     }
 
     @DeleteMapping("/delete/")
-    public ResponseEntity<StudentDataResponse> deleteStudent(@RequestParam("id") String id){
-        return studentService.deleteStudent(id);
+    public ResponseEntity<StudentDataResponse> deleteStudent(@RequestParam("id") String stu_id){
+        return studentService.deleteStudent(stu_id);
     }
 
 }

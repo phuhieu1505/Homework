@@ -7,4 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StudentRepository extends MongoRepository<Student, String> {
+    @Query("{'stu_id': ?0}")
+    Student findStudentByStuId(String stu_id);
+
 }
