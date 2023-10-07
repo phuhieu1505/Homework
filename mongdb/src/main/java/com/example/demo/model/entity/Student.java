@@ -20,8 +20,7 @@ import java.io.Serializable;
 public class Student {
 
     @Id
-    private int id;
-    private String stu_id;
+    private String id;
     private String stu_name;
     private int age;
     private String class_id;

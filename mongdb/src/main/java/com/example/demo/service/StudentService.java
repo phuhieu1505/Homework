@@ -19,7 +19,7 @@ public class StudentService {
 	private StudentRepository studentRepository;
 
 	public ResponseEntity<Student> addStudent(CreateStudentRequest student) throws Exception {
-		if (student.getStu_id() == null || student.getStu_id().equals("") ||
+		if (student.getId() == null || student.getId().equals("") ||
 				student.getStu_name() == null || student.getStu_name().equals("") ||
 				student.getAge() == null || student.getAge() == 0||
 		student.getClass_id() == null || student.getClass_id().equals("")
@@ -27,7 +27,7 @@ public class StudentService {
 		) throw new Exception("Request invalid");
 		return new ResponseEntity<>(studentRepository.save(
 				Student.builder()
-						.stu_id(student.getStu_id())
+						.id(student.getId())
 						.age(student.getAge())
 						.stu_name(student.getStu_name())
 						.build()
@@ -43,7 +43,7 @@ public class StudentService {
 				// Sao chép dữ liệu từ danh sách Student sang danh sách StudentDataResponse
 				for (Student student : studentList) {
 					StudentDataResponse studentDataResponse = new StudentDataResponse();
-					studentDataResponse.setStu_id(student.getStu_id());
+					studentDataResponse.setId(student.getId());
 					studentDataResponse.setStu_name(student.getStu_name());
 					studentDataResponse.setAge(student.getAge());
 					studentDataResponse.setClass_id(student.getClass_id());
@@ -61,18 +61,18 @@ public class StudentService {
 	}
 
 
-	public ResponseEntity<StudentDataResponse> getStudentById(String stu_id) {
-		Student student = studentRepository.getStudentById(stu_id);
+	public ResponseEntity<StudentDataResponse> getStudentById(String id) {
+		Optional<Student> studentOptional = studentRepository.findById(id);
 		StudentDataResponse studentDataResponse = new StudentDataResponse();
-		if (student != null) {
-			studentDataResponse.setStu_id(student.getStu_id());
-			studentDataResponse.setStu_name(student.getStu_name());
-			studentDataResponse.setAge(student.getAge());
-			studentDataResponse.setClass_id(student.getClass_id());
-			return new ResponseEntity<>(studentDataResponse, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		if (studentOptional !=null) {
+				Student student = studentOptional.get();
+				studentDataResponse.setId(student.getId());
+				studentDataResponse.setStu_name(student.getStu_name());
+				studentDataResponse.setAge(student.getAge());
+				studentDataResponse.setClass_id(student.getClass_id());
+				new ResponseEntity<>(studentDataResponse, HttpStatus.OK);
 		}
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	public ResponseEntity<Student> updateStudent(String stu_id, CreateStudentRequest student) {
@@ -103,7 +103,7 @@ public class StudentService {
 		if(student != null){
 			Student existingStudent = student.get();
 			studentRepository.deleteById(stu_id);
-			studentDataResponse.setStu_id(existingStudent.getStu_id());
+			studentDataResponse.setId(existingStudent.getId());
 			studentDataResponse.setStu_name(existingStudent.getStu_name());
 			studentDataResponse.setAge(existingStudent.getAge());
 			studentDataResponse.setClass_id(existingStudent.getClass_id());
