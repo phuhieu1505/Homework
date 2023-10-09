@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.model.entity.Classes;
 import com.example.demo.model.entity.Student;
 import com.example.demo.model.http.ClassDataResponse;
+import com.example.demo.model.http.CreateClassRequest;
 import com.example.demo.repository.ClassesRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,16 @@ public class ClassesService {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
+    public ResponseEntity<Classes> addClass(CreateClassRequest classRequest) throws Exception {
+        if (classRequest.getClass_id() == null || classRequest.getClass_id().isEmpty() ||
+                classRequest.getClass_name() == null || classRequest.getClass_name().isEmpty()
+        ) throw new Exception("Invalid request");
+        return new ResponseEntity<>(classesRepository.save(
+                Classes.builder()
+                        .class_id(classRequest.getClass_id())
+                        .class_name(classRequest.getClass_name())
+                        .students(classRequest.getStudents())
+                        .build()
+        ), HttpStatus.CREATED);
+    }
 }

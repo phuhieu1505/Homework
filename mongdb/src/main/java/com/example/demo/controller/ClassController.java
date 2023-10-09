@@ -1,13 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.entity.Classes;
 import com.example.demo.model.http.ClassDataResponse;
+import com.example.demo.model.http.CreateClassRequest;
 import com.example.demo.service.ClassesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,5 +22,9 @@ public class ClassController {
     @GetMapping("/get/")
     public ResponseEntity<ClassDataResponse> getClassById(@RequestParam("id") String class_id){
         return classesService.getClassById(class_id);
+    }
+    @PostMapping("/post")
+    public ResponseEntity<Classes> addClass(@RequestBody CreateClassRequest request) throws Exception{
+        return classesService.addClass(request);
     }
 }
