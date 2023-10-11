@@ -27,4 +27,8 @@ public class ClassController {
     public ResponseEntity<Classes> addClass(@RequestBody CreateClassRequest request) throws Exception{
         return classesService.addClass(request);
     }
+    @DeleteMapping("/delete")
+    public ResponseEntity<ClassDataResponse> deleteClass(@RequestParam("id") String stu_id){
+        return classesService.deleteClass(stu_id);
+    }
 }

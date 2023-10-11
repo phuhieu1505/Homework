@@ -59,12 +59,25 @@ public class ClassesService {
         if (classRequest.getClass_id() == null || classRequest.getClass_id().isEmpty() ||
                 classRequest.getClass_name() == null || classRequest.getClass_name().isEmpty()
         ) throw new Exception("Invalid request");
-        return new ResponseEntity<>(classesRepository.save(
+        return new ResponseEntity<>(classesRepository.insert(
                 Classes.builder()
                         .class_id(classRequest.getClass_id())
                         .class_name(classRequest.getClass_name())
                         .students(classRequest.getStudents())
                         .build()
         ), HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<ClassDataResponse> deleteClass(String class_id){
+        Classes classes = classesRepository.getClassesByClassId(class_id);
+        if(classes != null){
+            classesRepository.delete(classes);
+            ClassDataResponse response = new ClassDataResponse();
+            response.setClass_id(classes.getClass_id());
+            response.setClass_name(classes.getClass_name());
+            response.setStudents(classes.getStudents());
+            return new ResponseEntity<>(response,HttpStatus.GONE);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
