@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.entity.Classes;
 import com.example.demo.model.http.ClassDataResponse;
 import com.example.demo.model.http.CreateClassRequest;
+import com.example.demo.model.http.CreateStudentRequest;
 import com.example.demo.service.ClassesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +31,9 @@ public class ClassController {
     @DeleteMapping("/delete")
     public ResponseEntity<ClassDataResponse> deleteClass(@RequestParam("id") String stu_id){
         return classesService.deleteClass(stu_id);
+    }
+    @PutMapping("/update")
+    public ResponseEntity<Classes> updateClass(@RequestParam("id")String class_id, @RequestBody CreateClassRequest request) {
+        return classesService.updateClass(class_id, request);
     }
 }

@@ -4,6 +4,7 @@ import com.example.demo.model.entity.Classes;
 import com.example.demo.model.entity.Student;
 import com.example.demo.model.http.ClassDataResponse;
 import com.example.demo.model.http.CreateClassRequest;
+import com.example.demo.model.http.CreateStudentRequest;
 import com.example.demo.repository.ClassesRepository;
 import com.example.demo.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,20 @@ public class ClassesService {
             response.setClass_name(classes.getClass_name());
             response.setStudents(classes.getStudents());
             return new ResponseEntity<>(response,HttpStatus.GONE);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    public ResponseEntity<Classes> updateClass(String class_id, CreateClassRequest request) {
+        Classes classes = classesRepository.getClassesByClassId(class_id);
+        if(classes != null){
+            if(request.getClass_name() != null && !request.getClass_name().equals("")){
+                classes.setClass_name(request.getClass_name());
+            }
+//            if(request.getClass_name() != null || request.getClass_name().equals("")){
+//                classes.setStudents(request.getStudents());
+//            }
+            return new ResponseEntity<>(classesRepository.save(classes),HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
