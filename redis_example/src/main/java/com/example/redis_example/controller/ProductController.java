@@ -1,38 +1,42 @@
 package com.example.redis_example.controller;
 
 import com.example.redis_example.entity.Product;
-import com.example.redis_example.repository.ProductDAL;
+import com.example.redis_example.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/products")
 public class ProductController {
     @Autowired
-    private ProductDAL productDAL;
+    private ProductService productService;
 
-    @PostMapping("/save")
-    public Product save(@RequestBody Product product){
-        return productDAL.save(product);
+    @GetMapping("/all")
+    public List<Product> getAllProducts(){
+        return productService.getAllProducts();
     }
-
-    @GetMapping("/getall")
-    public List<Product> getAll(){
-        return productDAL.findAll();
-    }
-
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable int id){
-        return productDAL.findProductById(id);
+    public Product getProductById(@PathVariable("id") int id){
+        return productService.getProductById(id);
     }
 
+    @PostMapping("/add")
+    public Product addProduct(@RequestBody Product product){
+        return productService.addProduct(product);
+    }
+
+    @PutMapping("/{id}")
+    public Product updateProductById(@PathVariable("id") int id,@RequestBody Product product){
+        return productService.updateProduct(id,product);
+    }
 
     @DeleteMapping("/{id}")
-    public String deleteProduct(@PathVariable int id){
-        return productDAL.deleteProduct(id);
+    public String deleteProductById(@PathVariable("id")int id){
+         productService.deleteProduct(id);
+         return "Delete success";
     }
-
 }
