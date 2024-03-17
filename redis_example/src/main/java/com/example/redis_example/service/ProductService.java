@@ -3,6 +3,7 @@ package com.example.redis_example.service;
 import com.example.redis_example.entity.Product;
 import com.example.redis_example.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class ProductService {
     }
 
 
+    @CacheEvict(value = "product",key = "#product.id")
     public Product updateProduct(int id, Product product) {
         Optional<Product> productOptional = productRepo.findById(id);
         if(productOptional.isPresent()){
