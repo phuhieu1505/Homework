@@ -20,23 +20,24 @@ public class CustomerController {
    @Autowired
    private CustomerService customerService;
 
-  @PostMapping("/insert")
-   public Mono<Customer> insertCustomer(@RequestBody Customer customer){
-     return customerService.insertCustomer(customer);
-  }
+    @PostMapping("/insert")
+    public CompletableFuture<Customer> insertCustomerAsync(@RequestBody Customer customer) {
+        return customerService.insertCustomer(customer);
+    }
 
-  @GetMapping
-   public Flux<Customer> getAllCustomer(){
-     return customerService.findAll();
-  }
+    @GetMapping
+    public CompletableFuture<Flux<Customer>> getAllCustomerAsync() {
+        return customerService.findAll();
+    }
 
-  @GetMapping("/{id}")
-   public Mono<Customer> getCustomerById(@PathVariable String   id){
-     return customerService.findById(id);
-  }
+    @GetMapping("/{id}")
+    public CompletableFuture<Customer> getCustomerByIdAsync(@PathVariable String id) {
+        return customerService.findById(id);
+    }
 
-  @DeleteMapping("/{id}")
-    public Mono<Void> deleteCustomer(@PathVariable String id){
-      return customerService.deleteById(id);
-  }
+    @DeleteMapping("/{id}")
+    public CompletableFuture<Void> deleteCustomerAsync(@PathVariable String id) {
+        return customerService.deleteByIdAsync(id);
+    }
+
 }
