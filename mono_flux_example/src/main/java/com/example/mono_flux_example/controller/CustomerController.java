@@ -25,6 +25,12 @@ public class CustomerController {
         return customerService.insertCustomer(customer);
     }
 
+    @PostMapping("/insertCustomers")
+    public CompletableFuture<List<Customer>> insertCustomers(@RequestBody List<Customer> customers) {
+        return customerService.insertCustomers(customers);
+    }
+
+
     @GetMapping
     public CompletableFuture<Flux<Customer>> getAllCustomerAsync() {
         return customerService.findAll();
@@ -38,6 +44,16 @@ public class CustomerController {
     @DeleteMapping("/{id}")
     public CompletableFuture<Void> deleteCustomerAsync(@PathVariable String id) {
         return customerService.deleteByIdAsync(id);
+    }
+
+    @PostMapping("/increment/{customerId}")
+    public CompletableFuture<Long> incrementCounter(@PathVariable String customerId) {
+        return customerService.incrementCounter(customerId);
+    }
+
+    @GetMapping("/currentValue/{customerId}")
+    public CompletableFuture<Long> getCurrentValue(@PathVariable String customerId) {
+        return customerService.getCurrentValue(customerId);
     }
 
 }

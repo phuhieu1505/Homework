@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -30,6 +31,21 @@ public class CustomerService {
         });
     }
 
+    public CompletableFuture<List<Customer>> insertCustomers(List<Customer> customers) {
+        CompletableFuture<List<Customer>> completableFuture = new CompletableFuture<>();
+
+        Flux<Customer> customerFlux = Flux.fromIterable(customers);
+        customerFlux.flatMap(customer ->
+                        reactiveRedisTemplate.opsForValue().set(customer.getId(), customer).thenReturn(customer))
+                .collectList()
+                .subscribe(
+                        result -> completableFuture.complete(result),
+                        error -> completableFuture.completeExceptionally(error)
+                );
+
+        return completableFuture;
+    }
+
 
     public CompletableFuture<Customer> findById(String id) {
         return CompletableFuture.supplyAsync(() -> {
@@ -50,6 +66,23 @@ public class CustomerService {
             Mono<Boolean> deleteMono = reactiveRedisTemplate.opsForValue().delete(id);
             deleteMono.block();
             return null;
+        });
+    }
+
+    public CompletableFuture<Long> incrementCounter(String key) {
+        return CompletableFuture.supplyAsync(() -> {
+            Mono<Customer> customerMono = reactiveRedisTemplate.opsForValue().get(key);
+            return customerMono.flatMap(customer -> {
+                customer.setCounterValue(customer.getCounterValue() + 1); 
+                return reactiveRedisTemplate.opsForValue().set(key, customer).map(__ -> customer.getCounterValue());
+            }).block();
+        });
+    }
+
+    public CompletableFuture<Long> getCurrentValue(String key) {
+        return CompletableFuture.supplyAsync(() -> {
+            Mono<Customer> customerMono = reactiveRedisTemplate.opsForValue().get(key);
+            return customerMono.map(Customer::getCounterValue).block();
         });
     }
 }
