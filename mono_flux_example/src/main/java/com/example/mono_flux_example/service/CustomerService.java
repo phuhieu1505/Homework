@@ -10,9 +10,10 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 @Service
-public class CustomerService {
+public class CustomerService implements ICustomerService {
 
     @Autowired
     private ReactiveRedisTemplate<String, Customer> reactiveRedisTemplate;
@@ -84,5 +85,13 @@ public class CustomerService {
             Mono<Customer> customerMono = reactiveRedisTemplate.opsForValue().get(key);
             return customerMono.map(Customer::getCounterValue).block();
         });
+    }
+
+    @Override
+    public CompletionStage<List<Customer>> findAllCustomers() {
+        Flux<String> keysFlux = reactiveRedisTemplate.keys("*");
+        return keysFlux.flatMap(reactiveRedisTemplate.opsForValue()::get)
+                .collectList()
+                .toFuture();
     }
 }
