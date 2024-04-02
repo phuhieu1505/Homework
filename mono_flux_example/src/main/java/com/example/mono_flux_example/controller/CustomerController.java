@@ -3,6 +3,7 @@ package com.example.mono_flux_example.controller;
 import com.example.mono_flux_example.model.Customer;
 import com.example.mono_flux_example.model.ResponseData;
 import com.example.mono_flux_example.service.CustomerService;
+import com.example.mono_flux_example.service.ICustomerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 public class CustomerController {
 
 	@Autowired
-	private CustomerService customerService;
+	private ICustomerService customerService;
 
 	@Autowired
 	private ObjectMapper objectMapper;
