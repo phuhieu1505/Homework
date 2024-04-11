@@ -18,4 +18,5 @@ public class Student {
     private String stuName;
     private String stuClass;
     private int batch;
+//    private String teacherID;
 }
