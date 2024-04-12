@@ -6,4 +6,5 @@ import java.util.concurrent.CompletableFuture;
 
 public interface IStudentService {
     CompletableFuture<String> insertStudent(Student student);
+    CompletableFuture<Student> getStudentByID(String stuID);
 }

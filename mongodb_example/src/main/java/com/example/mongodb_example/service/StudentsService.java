@@ -63,13 +63,15 @@ public class StudentsService implements IStudentService {
 //    }
     @Override
     public CompletableFuture<String> insertStudent(Student student){
-        CompletableFuture<String> completableFuture = new CompletableFuture<>();
-        Mono<Student> mono = reactiveMongoTemplate.insert(student);
-        mono.subscribe(
-            rs -> completableFuture.complete(rs.getStuID()),
-                error -> completableFuture.completeExceptionally(error)
-        );
-        return completableFuture;
+        return Mono.just(student)
+                .flatMap(reactiveMongoTemplate::insert)
+                .map(s -> s.getStuID())
+                .toFuture();
     }
 
+    @Override
+    public CompletableFuture<Student>getStudentByID(String stuID){
+        Mono<Student> studentMono = reactiveMongoTemplate.findById(stuID, Student.class);
+        return studentMono.toFuture();
+    }
 }
