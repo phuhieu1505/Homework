@@ -99,12 +99,37 @@ public class StudentController {
         return Mono.fromFuture(future);
      }
 
-     @DeleteMapping("/{id}")
-     public Mono<ResponseData> deleteStudentById(String id){
-        var future = service.deleteStudentById(id)
-                .thenApply(rs -> ResponseData.builder().status(true).data(rs).build())
+//     @DeleteMapping("/{id}")
+//     public Mono<ResponseData> deleteStudentById(@PathVariable String id){
+//        var future = service.getStudentByID(id)
+//                .thenApply(rs ->  {
+//                    if(rs != null){
+//                        return service.deleteStudentById(id)
+//                                .thenApply(s -> s);
+//                    }else {
+//                        return "Not found";
+//                    }
+//                })
+//                .exceptionally(ex -> ResponseData.builder().status(false).data(ex.getMessage()).build());
+//        return Mono.fromFuture(future)
+//                .map(data -> ResponseData.builder().status(true).data("Delete success").build());
+//    }
+
+    @DeleteMapping("/{id}")
+    public Mono<ResponseData> deleteStudentById(@PathVariable String id){
+        var future = service.getStudentByID(id)
+                .thenCompose(rs -> {
+                    if(rs != null){
+                        return service.deleteStudentById(id)
+                                .thenApply(deletedStudent -> ResponseData.builder().status(true).data("Delete success").build());
+                    } else {
+                        CompletableFuture<ResponseData> notFoundFuture = CompletableFuture.completedFuture(ResponseData.builder().status(false).data("Not found").build());
+                        return notFoundFuture;
+                    }
+                })
                 .exceptionally(ex -> ResponseData.builder().status(false).data(ex.getMessage()).build());
         return Mono.fromFuture(future);
     }
+
 
 }

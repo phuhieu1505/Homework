@@ -96,11 +96,11 @@ public class StudentsService implements IStudentService {
     }
 
     @Override
-    public CompletableFuture<Void> deleteStudentById(String id){
-        Mono<Student> studentMono = reactiveMongoTemplate.findById(id, Student.class);
+    public CompletableFuture<Void> deleteStudentById(String stuID){
+        Mono<Student> studentMono = reactiveMongoTemplate.findById(stuID, Student.class);
         return studentMono.flatMap(existingStudent -> {
            if(existingStudent != null){
-               Mono<Void> deleteResult = reactiveMongoTemplate.remove(Query.query(Criteria.where("stuID").is(id)), Student.class)
+               Mono<Void> deleteResult = reactiveMongoTemplate.remove(Query.query(Criteria.where("stuID").is(stuID)), Student.class)
                        .then();
                return deleteResult;
            }else {
