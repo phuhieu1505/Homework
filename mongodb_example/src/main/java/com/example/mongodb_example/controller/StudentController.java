@@ -84,5 +84,27 @@ public class StudentController {
         return Mono.fromFuture(future);
     }
 
+     @PutMapping("/{id}")
+    public Mono<ResponseData> updateStudent(@PathVariable String id, @RequestBody Student student){
+        var future = service.updateStudentById(id,student)
+                .thenApply(existingStudent ->{
+                    if(existingStudent != null) {
+                       return ResponseData.builder().status(true).data(existingStudent).build();
+                    }else {
+                       return ResponseData.builder().status(false).data("Not found").build();
+                    }
+                })
+                .exceptionally(ex -> ResponseData.builder().status(false).data(ex.getMessage()).build());
+
+        return Mono.fromFuture(future);
+     }
+
+     @DeleteMapping("/{id}")
+     public Mono<ResponseData> deleteStudentById(String id){
+        var future = service.deleteStudentById(id)
+                .thenApply(rs -> ResponseData.builder().status(true).data(rs).build())
+                .exceptionally(ex -> ResponseData.builder().status(false).data(ex.getMessage()).build());
+        return Mono.fromFuture(future);
+    }
 
 }

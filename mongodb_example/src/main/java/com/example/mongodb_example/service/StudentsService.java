@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -73,5 +75,37 @@ public class StudentsService implements IStudentService {
     public CompletableFuture<Student>getStudentByID(String stuID){
         Mono<Student> studentMono = reactiveMongoTemplate.findById(stuID, Student.class);
         return studentMono.toFuture();
+    }
+
+    @Override
+    public CompletableFuture<Student> updateStudentById(String stuID, Student student){
+        Mono<Student> studentMono = reactiveMongoTemplate.findById(stuID, Student.class);
+        return studentMono.flatMap(existStudent ->{
+
+                    if(!existStudent.getStuID().isEmpty()){
+                        existStudent.setStuName(student.getStuName());
+                        existStudent.setStuClass(student.getStuClass());
+                        existStudent.setBatch(student.getBatch());
+                        return reactiveMongoTemplate.save(existStudent);
+
+                    }else {
+                        return Mono.empty();
+                    }
+                })
+                .toFuture();
+    }
+
+    @Override
+    public CompletableFuture<Void> deleteStudentById(String id){
+        Mono<Student> studentMono = reactiveMongoTemplate.findById(id, Student.class);
+        return studentMono.flatMap(existingStudent -> {
+           if(existingStudent != null){
+               Mono<Void> deleteResult = reactiveMongoTemplate.remove(Query.query(Criteria.where("stuID").is(id)), Student.class)
+                       .then();
+               return deleteResult;
+           }else {
+               return Mono.empty();
+           }
+        }).toFuture();
     }
 }
