@@ -51,9 +51,38 @@ public class StudentController {
                 .map(data -> ResponseData.builder().status(!data.isEmpty()).data(data).build());
     }
 
+//    @GetMapping("/{id}")
+//    public Mono<ResponseData> getStudentById (@PathVariable String id) {
+//        var future = service.getStudentByID(id)
+//                .thenApply(student -> {
+//                    if(!student.getStuID().isEmpty()){
+//                        return student;
+//                    }else {
+//                        throw  new RuntimeException("Student doesn't exists");
+//                    }
+//                })
+//                .exceptionally(ex -> {
+//                    System.out.println("Error"+ ex.getMessage());
+//                    return null;
+//                });
+//        return Mono.fromFuture(future)
+//                .map(data -> ResponseData.builder().status(!data.getStuID().isEmpty()).data(data).build());
+//    }
+
     @GetMapping("/{id}")
-    public CompletableFuture<Student> getStudentById(@PathVariable String id) {
-        return service.getStudentByID(id);
+    public Mono<ResponseData> getStudentById(@PathVariable String id) {
+        var future = service.getStudentByID(id)
+                .thenApply(student -> {
+                    if (student != null) {
+                        return ResponseData.builder().status(true).data(student).build();
+                    } else {
+                        return ResponseData.builder().status(false).data("Student not found").build();
+                    }
+                })
+                .exceptionally(ex -> ResponseData.builder().status(false).data(ex.getMessage()).build());
+
+        return Mono.fromFuture(future);
     }
+
 
 }
