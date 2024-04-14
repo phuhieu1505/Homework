@@ -4,6 +4,8 @@ import com.example.mongodb_example.entity.Student;
 import com.example.mongodb_example.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -23,6 +25,9 @@ public class StudentsService implements IStudentService {
     @Autowired
     @Qualifier("student_template")
     private ReactiveMongoTemplate reactiveMongoTemplate;
+
+    @Autowired
+    private CacheManager cacheManager;
 //    public ResponseEntity<List<Student>> getAllStudents(){
 //        try{
 //            List<Student> studentList = repository.findAll();
@@ -68,6 +73,12 @@ public class StudentsService implements IStudentService {
         return Mono.just(student)
                 .flatMap(reactiveMongoTemplate::insert)
                 .map(s -> s.getStuID())
+                .doOnNext(stuID ->{
+                    Cache cache = cacheManager.getCache("studentCache");
+                    if(cache !=null){
+                        cache.put(stuID,student);
+                    }
+                })
                 .toFuture();
     }
 
@@ -102,6 +113,7 @@ public class StudentsService implements IStudentService {
            if(existingStudent != null){
                Mono<Void> deleteResult = reactiveMongoTemplate.remove(Query.query(Criteria.where("stuID").is(stuID)), Student.class)
                        .then();
+               cacheManager.getCache("studentCache").evict(stuID);
                return deleteResult;
            }else {
                return Mono.empty();
