@@ -4,7 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Data
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -14,6 +14,5 @@ public class Teacher {
     @Id
     private String teacherID;
     private String teacherName;
-    private String classAttend;
 
 }
