@@ -1,6 +1,7 @@
 package com.example.mongodb_example.service;
 
 import com.example.mongodb_example.entity.Student;
+import com.example.mongodb_example.entity.Teacher;
 import com.example.mongodb_example.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,11 +12,13 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -28,57 +31,53 @@ public class StudentsService implements IStudentService {
 
     @Autowired
     private CacheManager cacheManager;
-//    public ResponseEntity<List<Student>> getAllStudents(){
-//        try{
-//            List<Student> studentList = repository.findAll();
-//            if(!studentList.isEmpty())
-//                return new ResponseEntity<>(studentList, HttpStatus.OK);
-//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//        }catch (Exception e){
-//            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-//
-//    public ResponseEntity<Student> insertStudent(Student student){
-//        try{
-//            Student newStudent = repository.save(student);
-//            if(student.getStuName().equals("") || student.getBatch() < 2000 || student.getStuClass().equals("") )
-//                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//            return new ResponseEntity<>(newStudent,HttpStatus.CREATED);
-//        }catch (Exception e){
-//            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
-//
-//    public ResponseEntity<Student> updateStudent(String id,Student student){
-//            try{
-//                Optional<Student> studentOptional = repository.findById(id);
-//                if(studentOptional.isPresent()){
-//                    Student newStudent = studentOptional.get();
-//                    if(!newStudent.getStuName().equals("") || newStudent.getBatch() >= 2000 || !newStudent.getStuClass().equals("") ){
-//                        newStudent.setStuName(student.getStuName());
-//                        newStudent.setStuClass(student.getStuClass());
-//                        newStudent.setBatch(student.getBatch());
-//                        return new ResponseEntity<>(repository.save(newStudent),HttpStatus.OK);
+
+    @Autowired
+    private ReactiveRedisTemplate<String,Student> redisTemplate;
+
+    @Autowired
+    private ITeacherService teacherService;
+
+//    @Override
+//    public CompletableFuture<String> insertStudent(Student student){
+//        return Mono.just(student)
+//                .flatMap(reactiveMongoTemplate::insert)
+//                .flatMap(stu ->{
+//                    if(stu.getTeacherID() != null){
+//                        Teacher teacher = new Teacher();
+//                        return Mono.fromFuture(teacherService.getTeacherById(teacher.getTeacherID())
+//                                .thenApply(t ->t));
+//                    }else {
+//                        return Mono.just(stu);
 //                    }
-//                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//                }
-//                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//            }catch (Exception e){
-//                return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-//            }
+//                })
+//                .map(s -> student.getStuID())
+//                .doOnNext(stuID ->{
+//                    Cache cache = cacheManager.getCache("studentCache");
+//                    if(cache !=null){
+//                        cache.put(stuID,student);
+//                    }
+//                })
+//                .toFuture();
 //    }
     @Override
     public CompletableFuture<String> insertStudent(Student student){
         return Mono.just(student)
                 .flatMap(reactiveMongoTemplate::insert)
                 .map(s -> s.getStuID())
-                .doOnNext(stuID ->{
-                    Cache cache = cacheManager.getCache("studentCache");
-                    if(cache !=null){
-                        cache.put(stuID,student);
-                    }
+                .flatMap(stuID -> {
+                    String key = "student:" + stuID;
+                    return redisTemplate.opsForValue().set(key,student)
+                            .flatMap(rs ->{
+                                if(rs){
+                                    Duration ttl = Duration.ofMinutes(5);
+                                    return redisTemplate.expire(key,ttl);
+                                }else {
+                                    return Mono.empty();
+                                }
+                            });
                 })
+                .thenReturn(student.getStuID())
                 .toFuture();
     }
 
@@ -89,22 +88,35 @@ public class StudentsService implements IStudentService {
     }
 
     @Override
-    public CompletableFuture<Student> updateStudentById(String stuID, Student student){
+    public CompletableFuture<Student> updateStudentById(String stuID, Student student) {
         Mono<Student> studentMono = reactiveMongoTemplate.findById(stuID, Student.class);
-        return studentMono.flatMap(existStudent ->{
+        return studentMono.flatMap(existingStudent -> {
+            if (!existingStudent.getStuID().isEmpty()) {
 
-                    if(!existStudent.getStuID().isEmpty()){
-                        existStudent.setStuName(student.getStuName());
-                        existStudent.setStuClass(student.getStuClass());
-                        existStudent.setBatch(student.getBatch());
-                        return reactiveMongoTemplate.save(existStudent);
+                existingStudent.setStuName(student.getStuName());
+                existingStudent.setStuClass(student.getStuClass());
+                existingStudent.setBatch(student.getBatch());
 
-                    }else {
-                        return Mono.empty();
-                    }
-                })
-                .toFuture();
+                return reactiveMongoTemplate.save(existingStudent)
+                        .flatMap(updatedStudent -> {
+                            String key = "student:" + updatedStudent.getStuID();
+                            return redisTemplate.opsForValue().set(key, updatedStudent)
+                                    .flatMap(rs ->{
+                                        if(rs){
+                                            Duration ttl = Duration.ofMinutes(5);
+                                            return redisTemplate.expire(key,ttl);
+                                        }else {
+                                            return Mono.empty();
+                                        }
+                                    })
+                                    .then(Mono.just(updatedStudent));
+                        });
+            } else {
+                return Mono.empty();
+            }
+        }).toFuture();
     }
+
 
     @Override
     public CompletableFuture<Void> deleteStudentById(String stuID){

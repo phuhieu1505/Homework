@@ -2,6 +2,7 @@ package com.example.mongodb_example.controller;
 
 import com.example.mongodb_example.entity.ResponseData;
 import com.example.mongodb_example.entity.Student;
+import com.example.mongodb_example.entity.Teacher;
 import com.example.mongodb_example.repository.StudentRepository;
 import com.example.mongodb_example.service.StudentsService;
 import com.example.mongodb_example.service.IStudentService;
@@ -85,7 +86,7 @@ public class StudentController {
     }
 
      @PutMapping("/{id}")
-    public Mono<ResponseData> updateStudent(@PathVariable String id, @RequestBody Student student){
+     public Mono<ResponseData> updateStudent(@PathVariable String id, @RequestBody Student student){
         var future = service.updateStudentById(id,student)
                 .thenApply(existingStudent ->{
                     if(existingStudent != null) {
