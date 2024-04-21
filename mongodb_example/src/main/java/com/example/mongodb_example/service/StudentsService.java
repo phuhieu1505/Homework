@@ -125,8 +125,9 @@ public class StudentsService implements IStudentService {
            if(existingStudent != null){
                Mono<Void> deleteResult = reactiveMongoTemplate.remove(Query.query(Criteria.where("stuID").is(stuID)), Student.class)
                        .then();
-               cacheManager.getCache("studentCache").evict(stuID);
-               return deleteResult;
+               String key = "student:" +stuID;
+               return redisTemplate.opsForValue().delete(key)
+                       .then(deleteResult);
            }else {
                return Mono.empty();
            }
