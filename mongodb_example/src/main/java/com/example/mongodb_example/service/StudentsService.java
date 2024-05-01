@@ -30,9 +30,6 @@ public class StudentsService implements IStudentService {
     private ReactiveMongoTemplate reactiveMongoTemplate;
 
     @Autowired
-    private CacheManager cacheManager;
-
-    @Autowired
     private ReactiveRedisTemplate<String,Student> redisTemplate;
 
     @Autowired
@@ -82,10 +79,18 @@ public class StudentsService implements IStudentService {
     }
 
     @Override
-    public CompletableFuture<Student>getStudentByID(String stuID){
-        Mono<Student> studentMono = reactiveMongoTemplate.findById(stuID, Student.class);
-        return studentMono.toFuture();
+    public CompletableFuture<Student> getStudentByID(String stuID) {
+        String key = "student:" + stuID;
+        return redisTemplate.opsForValue().get(key)
+                .switchIfEmpty(
+                        reactiveMongoTemplate.findById(stuID, Student.class)
+                                .flatMap(existStudent ->
+                                        redisTemplate.opsForValue().set(key, existStudent, Duration.ofMinutes(5))
+                                                .thenReturn(existStudent))
+                ).toFuture();
     }
+
+
 
     @Override
     public CompletableFuture<Student> updateStudentById(String stuID, Student student) {
