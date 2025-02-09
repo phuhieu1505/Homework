@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="main.java.GUI.MainView">
+  <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="GridLayoutManager" row-count="17" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="755" height="608"/>
+    </constraints>
+    <properties>
+      <background color="-6300190"/>
+      <enabled value="false"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <component id="4b119" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <icon value="main/resoucres/shopping-cart (1).png"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <hspacer id="98709">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <component id="5a43c" class="javax.swing.JButton" binding="JBKhachHang">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-14407117"/>
+          <enabled value="true"/>
+          <foreground color="-1971719"/>
+          <hideActionText value="false"/>
+          <text value="Khách hàng"/>
+        </properties>
+      </component>
+      <component id="1ca04" class="javax.swing.JButton" binding="JBNhanVien">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-14407117"/>
+          <enabled value="true"/>
+          <foreground color="-1971719"/>
+          <text value="Nhân viên"/>
+        </properties>
+      </component>
+      <component id="ef008" class="javax.swing.JButton" binding="JBHoaDon">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-14407117"/>
+          <enabled value="true"/>
+          <foreground color="-1971719"/>
+          <text value="Hóa Đơn"/>
+        </properties>
+      </component>
+      <component id="3a1e2" class="javax.swing.JButton" binding="JBNhaCungCap">
+        <constraints>
+          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-14407117"/>
+          <enabled value="true"/>
+          <foreground color="-1971719"/>
+          <text value="Nhà cung cấp"/>
+        </properties>
+      </component>
+      <component id="6d49" class="javax.swing.JLabel" binding="JLAdmin">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="true"/>
+          <font name="Segoe UI Black" size="18" style="1"/>
+          <foreground color="-14407117"/>
+          <text value="Admin"/>
+        </properties>
+      </component>
+      <component id="c440" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="true"/>
+          <font name="Segoe UI Black" size="28" style="1"/>
+          <foreground color="-14407117"/>
+          <text value="Quản lý siêu thị mini"/>
+        </properties>
+      </component>
+      <grid id="81afa" binding="JPright" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="2" column="1" row-span="15" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-11445916"/>
+          <enabled value="false"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="f4760" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <icon value="main/resoucres/shop.png"/>
+              <text value=""/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="e624d" class="javax.swing.JButton" binding="JBBanHang">
+        <constraints>
+          <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-14407117"/>
+          <enabled value="true"/>
+          <foreground color="-1971719"/>
+          <text value="Bán Hàng"/>
+        </properties>
+      </component>
+      <component id="78c7a" class="javax.swing.JButton" binding="JBSanPham">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-14407117"/>
+          <foreground color="-1971719"/>
+          <text value="Sản Phẩm"/>
+        </properties>
+      </component>
+      <component id="2f75c" class="javax.swing.JButton" binding="JBPhieuNhap">
+        <constraints>
+          <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-14407117"/>
+          <foreground color="-1971719"/>
+          <text value="Phiếu Nhập"/>
+        </properties>
+      </component>
+      <component id="6574" class="javax.swing.JButton" binding="JBTaiKhoan">
+        <constraints>
+          <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-14407117"/>
+          <foreground color="-1971719"/>
+          <text value="Tài Khoản"/>
+        </properties>
+      </component>
+      <component id="18d90" class="javax.swing.JButton" binding="JBTroVe">
+        <constraints>
+          <grid row="13" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-14407117"/>
+          <enabled value="true"/>
+          <foreground color="-1971719"/>
+          <text value="Trở Về"/>
+        </properties>
+      </component>
+      <component id="ebeb1" class="javax.swing.JButton" binding="JBThongKe">
+        <constraints>
+          <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-14407117"/>
+          <foreground color="-1971719"/>
+          <text value="Thống Kê"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
